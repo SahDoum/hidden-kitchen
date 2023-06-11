@@ -2,7 +2,7 @@ from django.db import models
 from uuid import uuid4
 
 
-class User(models.Model):
+class Customer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     telegram_id = models.UUIDField(default=uuid4)
 
