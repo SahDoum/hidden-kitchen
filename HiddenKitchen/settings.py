@@ -130,3 +130,5 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend/static")]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', 'non-valid_some_token')
