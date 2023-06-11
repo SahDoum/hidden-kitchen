@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from telegram import Bot
-from telegram.ext import Updater, CommandHandler
-from settings import TELEGRAM_BOT_TOKEN
+from telegram import Bot, Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
+
+from HiddenKitchen.settings import TELEGRAM_BOT_TOKEN
 
 
 def start_command(update: Update, context: CallbackContext):
