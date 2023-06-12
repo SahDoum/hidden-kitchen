@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from customer.views import menu
+from customer_bot.views import menu, make_order
 
 def test(request):
     return "Hello world!"
@@ -26,4 +26,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', test),
     path('menu.html', menu),
+    path('customer/makeOrder', make_order)
 ]
+
+
+# https://github.com/mcpeblocker/durgerking-clone-bot/tree/master
+# https://github.com/telegram-bot-php/durger-king/tree/master/public
+# https://github.com/felixjimcal/telegram_car_dealer_demo
+# https://github.com/pashtonchik/sneackers-shop-in-telegram/blob/main/handlers/users/check_profile_info.py
+# https://github.com/fruitourist/liot

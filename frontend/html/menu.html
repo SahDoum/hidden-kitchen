@@ -442,7 +442,9 @@
     <script src="https://tg.dev/js/jquery.min.js"></script>
     <script src="https://tg.dev/js/tgsticker.js?27"></script>
     <script src="static/js/cafe.js"></script>
-    <script>Cafe.init({"apiUrl":"\/cafe\/api","userId":0,"userHash":null});</script>
+    <script>
+      var cafe_api = `${window.location.origin}/customer`
+      Cafe.init({"apiUrl":cafe_api,"userId":0,"userHash":null});</script>
   </body>
 </html>
 <!-- page generated in 1.46ms -->

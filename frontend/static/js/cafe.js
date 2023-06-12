@@ -20,8 +20,9 @@ var Cafe = {
     Cafe.initLotties();
     $("body").show();
     if (
-      !Telegram.WebApp.initDataUnsafe ||
-      !Telegram.WebApp.initDataUnsafe.query_id
+      false
+      //!Telegram.WebApp.initDataUnsafe ||
+      //!Telegram.WebApp.initDataUnsafe.query_id
     ) {
       Cafe.isClosed = true;
       $("body").addClass("closed");
@@ -39,6 +40,8 @@ var Cafe = {
     Telegram.WebApp.MainButton.setParams({
       text_color: "#fff",
     }).onClick(Cafe.mainBtnClicked);
+    document.addEventListener("keydown", Cafe.mainBtnClicked, false);
+
     initRipple();
   },
   initLotties: function () {
@@ -235,9 +238,9 @@ var Cafe = {
     }
     if (mode_order) {
       var height = $(".cafe-items").height();
-      $(".js-item-lottie").each(function () {
-        RLottie.setVisible(this, false);
-      });
+      // $(".js-item-lottie").each(function () {
+      //   RLottie.setVisible(this, false);
+      // });
       $(".cafe-order-overview").show();
       $(".cafe-items").css("maxHeight", height).redraw();
       $("body").addClass("order-mode");
@@ -246,14 +249,14 @@ var Cafe = {
       });
       Telegram.WebApp.expand();
       setTimeout(function () {
-        $(".js-item-lottie").each(function () {
-          RLottie.setVisible(this, true);
-        });
+        // $(".js-item-lottie").each(function () {
+        //   RLottie.setVisible(this, true);
+        // });
       }, anim_duration);
     } else {
-      $(".js-item-lottie").each(function () {
-        RLottie.setVisible(this, false);
-      });
+      // $(".js-item-lottie").each(function () {
+      //   RLottie.setVisible(this, false);
+      // });
       $("body").removeClass("order-mode");
       setTimeout(function () {
         $(".cafe-items").css("maxHeight", "");
@@ -287,6 +290,7 @@ var Cafe = {
       }
       Cafe.toggleLoading(true);
       Cafe.apiRequest("makeOrder", params, function (result) {
+        console.log(result)
         Cafe.toggleLoading(false);
         if (result.ok) {
           Telegram.WebApp.close();
@@ -317,7 +321,9 @@ var Cafe = {
   },
   apiRequest: function (method, data, onCallback) {
     var authData = Telegram.WebApp.initData || "";
-    $.ajax(Cafe.apiUrl, {
+    var apiUrl = Cafe.apiUrl + '/' + method;
+    console.log(Cafe.apiUrl + '/' + method);
+    $.ajax(apiUrl, {
       type: "POST",
       data: $.extend(data, { _auth: authData, method: method }),
       dataType: "json",
@@ -328,7 +334,7 @@ var Cafe = {
         onCallback && onCallback(result);
       },
       error: function (xhr) {
-        onCallback && onCallback({ error: "Server error" });
+        onCallback && onCallback({ error: "Server error at " + Cafe.apiUrl });
       },
     });
   },

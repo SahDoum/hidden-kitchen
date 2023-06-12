@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from telegram import Bot, Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
@@ -12,14 +11,14 @@ def start_command(update: Update, context: CallbackContext):
 
 
 def menu(request):
-	return render(request, "menu.html")
+    return render(request, "menu.html")
 
 
 def init_bot():
-    # bot = Bot(token=TELEGRAM_BOT_TOKEN)
-    # updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
-    # dispatcher = updater.dispatcher
+    # pass
+    bot = Bot(token=TELEGRAM_BOT_TOKEN)
+    updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
+    dispatcher = updater.dispatcher
 
-    # dispatcher.add_handler(CommandHandler("start", start_command))
-    # updater.start_polling()
-    pass
+    dispatcher.add_handler(CommandHandler("start", start_command))
+    updater.start_polling()
