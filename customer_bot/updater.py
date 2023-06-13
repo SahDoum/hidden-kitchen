@@ -3,6 +3,9 @@ from telegram.ext import Updater
 from HiddenKitchen.settings import CUSTOMER_BOT_TOKEN
 
 
+print("STARTING POLLING!!!!")
+print(CUSTOMER_BOT_TOKEN)
+
 updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
