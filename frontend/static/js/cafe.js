@@ -40,7 +40,11 @@ var Cafe = {
     Telegram.WebApp.MainButton.setParams({
       text_color: "#fff",
     }).onClick(Cafe.mainBtnClicked);
-    document.addEventListener("keydown", Cafe.mainBtnClicked, false);
+    document.addEventListener("keydown", (e) => {
+      console.log(e)
+      if (e.keyCode == 13)
+        Cafe.mainBtnClicked()
+    }, false);
 
     initRipple();
   },
@@ -283,6 +287,7 @@ var Cafe = {
       var params = {
         order_data: Cafe.getOrderData(),
         comment: comment,
+        price: Cafe.totalPrice
       };
       if (Cafe.userId && Cafe.userHash) {
         params.user_id = Cafe.userId;
@@ -322,14 +327,16 @@ var Cafe = {
   apiRequest: function (method, data, onCallback) {
     var authData = Telegram.WebApp.initData || "";
     var apiUrl = Cafe.apiUrl + '/' + method;
+    var userId = 155493213;
+    if(Cafe.userId) userId = Cafe.userId;
     console.log(Cafe.apiUrl + '/' + method);
     $.ajax(apiUrl, {
       type: "POST",
-      data: $.extend(data, { _auth: authData, method: method }),
-      dataType: "json",
-      xhrFields: {
-        withCredentials: true,
-      },
+      data: $.extend(data, { _auth: authData, method: method, user_id: userId, user_hash: Cafe.userHash }),
+      //dataType: "json",
+      //xhrFields: {
+      //  withCredentials: true,
+      //},
       success: function (result) {
         onCallback && onCallback(result);
       },

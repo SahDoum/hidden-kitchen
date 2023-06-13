@@ -444,7 +444,8 @@
     <script src="static/js/cafe.js"></script>
     <script>
       var cafe_api = `${window.location.origin}/customer`
-      Cafe.init({"apiUrl":cafe_api,"userId":0,"userHash":null});</script>
+      var user_id = 314;//Telegram.WebApp.initDataUnsafe.user.id || 0;
+      Cafe.init({"apiUrl":cafe_api,"userId": user_id,"userHash":null});</script>
   </body>
 </html>
 <!-- page generated in 1.46ms -->

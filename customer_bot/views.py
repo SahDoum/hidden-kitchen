@@ -1,13 +1,46 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 
 import json
 
-from HiddenKitchen.settings import TELEGRAM_BOT_TOKEN, PROVIDER_TOKEN
+from orders.models import Order, MenuItem
+from users.models import User
+
+
+from HiddenKitchen.settings import PROVIDER_TOKEN
 
 
 def menu(request):
-	return render(request, "menu.html")
+    # return render(request, "menu.html")
+	return render(request, "cafe.html", {"menu_items": MenuItem.objects.all()})
+
+
+def create_order_cash(request):
+    pass
+
+    # get info from request
+    # get user from request
+    # get items with request
+    # get price
+    # validate price
+    info = ""
+    Order.create_from_telegram(info, cash_payment=True)
+    return HttpResponse(json.dumps({"desc":"fine"}), content_type="application/json")
+
+
+def create_order_invoice(request):
+    # just invoice and handler for invoice success? 
+    # Or order with status "wait payment"?
+    # how to accept invoice receipt?
+    pass
+
+
+def get_user_info(request):
+    # delivery info
+    # adresses
+    # phone
+    # name
+    return HttpResponse(json.dumps({"user":"whole info"}), content_type="application/json")
 
 
 def make_order(request):
@@ -39,4 +72,21 @@ def make_order(request):
     # )
     print("Making order")
     print(request)
-    return HttpResponse(json.dumps({"desc":"fine"}), content_type="application/json")
+    print(request.method)
+    print(request.POST)
+    data = request.POST
+    user_id = data['user_id']
+    user_hash = data['user_hash']
+    price = data.get('price', -1)
+
+    print(data['order_data'])
+
+    try:
+        user = User.get_telegram_user(user_id, user_hash)
+    except User.DoesNotExist:
+        print("Error")
+        return HttpResponseBadRequest("User does not exists")
+
+
+    order = Order.create_from_telegram(user, items=data['order_data'], comment=data['comment'], price=price)
+    return HttpResponse(json.dumps({"ok":True}), content_type="application/json")

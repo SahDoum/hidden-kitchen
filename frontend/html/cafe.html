@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hidden Kitchen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="MobileOptimized" content="176" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script src="https://tg.dev/js/telegram-web-app.js?7"></script>
+    <script>
+      function setThemeClass() {
+        document.documentElement.className = Telegram.WebApp.colorScheme;
+      }
+      Telegram.WebApp.onEvent('themeChanged', setThemeClass);
+      setThemeClass();
+    </script>
+    <link href="static/css/cafe.css" rel="stylesheet">
+  </head>
+  <body style="display:none">
+    <section class="cafe-page cafe-items">
+    {% load static %}
+
+    {% for item in menu_items %}
+      <div class="cafe-item js-item" data-item-id="{{ item.code }}" data-item-price="{{ item.price }}">
+        <div class="cafe-item-counter js-item-counter">1</div>
+        <div class="cafe-item-photo">
+          <picture class="cafe-item-lottie js-item-lottie">
+            <img src="{% static item.image %}">
+          </picture>
+        </div>
+        <div class="cafe-item-label">
+          <span class="cafe-item-title">{{ item.name }}</span>
+          <span class="cafe-item-price">₾{{ item.price }}</span>
+        </div>
+        <div class="cafe-item-buttons">
+          <button class="cafe-item-decr-button js-item-decr-btn button-item ripple-handler">
+            <span class="ripple-mask"><span class="ripple"></span></span>
+          </button>
+          <button class="cafe-item-incr-button js-item-incr-btn button-item ripple-handler">
+            <span class="button-item-label">Add</span>
+            <span class="ripple-mask"><span class="ripple"></span></span>
+          </button>
+        </div>
+      </div>
+    {% endfor %}
+<div class="cafe-item-shadow"></div><div class="cafe-item-shadow"></div><div class="cafe-item-shadow"></div><div class="cafe-item-shadow"></div>
+</section>
+<section class="cafe-page cafe-order-overview">
+  <div class="cafe-block">
+    <div class="cafe-order-header-wrap">
+      <h2 class="cafe-order-header">Ваш Заказ</h2>
+      <span class="cafe-order-edit js-order-edit">Изменить</span>
+    </div>
+
+    <div class="cafe-order-items">
+
+    {% for item in menu_items %}
+      <div class="cafe-order-item js-order-item" data-item-id="{{ item.code }}">
+        <div class="cafe-order-item-photo">
+          <picture class="cafe-item-lottie js-item-lottie">
+            <img src="{% static item.image %}">
+          </picture>
+        </div>
+        <div class="cafe-order-item-label">
+          <div class="cafe-order-item-title">{{ item.name }} 
+            <span class="cafe-order-item-counter"><span class="js-order-item-counter">1</span>x</span>
+          </div>
+          <div class="cafe-order-item-description">{{ item.description }}</div>
+        </div>
+        <div class="cafe-order-item-price js-order-item-price">₾{{ item.price }}</div>
+      </div>
+    {% endfor %}
+
+    </div>
+  </div>
+  <div class="cafe-text-field-wrap">
+    <textarea class="cafe-text-field js-order-comment-field cafe-block" rows="1" placeholder="Комментарий к заказу…"></textarea>
+    <div class="cafe-text-field-hint">
+      Любые дополнительные запросы, детали, пожелания.
+    </div>
+  </div>
+</section>
+<div class="cafe-status-wrap">
+  <div class="cafe-status js-status"></div>
+</div>
+    <script src="https://tg.dev/js/jquery.min.js"></script>
+    <script src="https://tg.dev/js/tgsticker.js?27"></script>
+    <script src="static/js/cafe.js"></script>
+    <script>
+      var cafe_api = `${window.location.origin}/customer`
+      var user_id = 155493213;
+      try {
+        user_id = Telegram.WebApp.initDataUnsafe.user.id;
+      } catch{}
+      Cafe.init({"apiUrl":cafe_api,"userId": user_id,"userHash":null});</script>
+  </body>
+</html>
+<!-- page generated in 1.46ms -->
