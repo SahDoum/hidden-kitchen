@@ -3,7 +3,14 @@ from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext
 
 from users.models import User
-from updater import updater
+# from updater import updater
+
+
+from telegram.ext import Updater
+
+from HiddenKitchen.settings import CUSTOMER_BOT_TOKEN
+
+
 
 
 def start_command(update: Update, context: CallbackContext):
@@ -14,3 +21,14 @@ def start_command(update: Update, context: CallbackContext):
 
 def menu(request):
     return render(request, "menu.html")
+
+
+
+def start_polling():
+    updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("start", start_command))
+    updater.start_polling()
+
+
+start_polling()
