@@ -12,7 +12,7 @@ class User(models.Model):
 
     @classmethod
     def create_from_telegram(cls, user):
-        tgUser = cls.get_or_create(chat_id=user.id)
+        tgUser = cls.objects.get_or_create(chat_id=user.id)
         return tgUser
 
     @classmethod
