@@ -7,7 +7,6 @@ from users.models import User
 
 
 from telegram.ext import Updater
-
 from HiddenKitchen.settings import CUSTOMER_BOT_TOKEN
 
 
@@ -21,16 +20,15 @@ def menu(request):
     return render(request, "menu.html")
 
 
+# def start_polling():
+#     if start_polling.POLLINT_STARTED:
+#         return
+#     print("POLLING!!!!!!")
+#     start_polling.POLLINT_STARTED = True
+#     updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
+#     dispatcher = updater.dispatcher
+#     dispatcher.add_handler(CommandHandler("start", start_command))
+#     updater.start_polling()
 
-def start_polling():
-    if start_polling.POLLINT_STARTED:
-        return
-    print("POLLING!!!!!!")
-    start_polling.POLLINT_STARTED = True
-    updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
-    dispatcher = updater.dispatcher
-    dispatcher.add_handler(CommandHandler("start", start_command))
-    updater.start_polling()
-
-start_polling.POLLINT_STARTED = False
-start_polling()
+# start_polling.POLLINT_STARTED = False
+# start_polling()
