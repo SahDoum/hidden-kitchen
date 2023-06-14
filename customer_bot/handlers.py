@@ -11,8 +11,6 @@ from telegram.ext import Updater
 from HiddenKitchen.settings import CUSTOMER_BOT_TOKEN
 
 
-
-
 def start_command(update: Update, context: CallbackContext):
     user = update.effective_user
     User.create_from_telegram(user)
@@ -24,7 +22,11 @@ def menu(request):
 
 
 
+POLLINT_STARTED = False
 def start_polling():
+    if POLLINT_STARTED:
+        return
+    POLLINT_STARTED = True
     updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start_command))
