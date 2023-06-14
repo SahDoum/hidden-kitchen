@@ -8,6 +8,7 @@ from users.models import User
 
 
 from HiddenKitchen.settings import PROVIDER_TOKEN
+import customer_bot.handlers
 
 
 def menu(request):
