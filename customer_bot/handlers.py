@@ -25,6 +25,7 @@ def menu(request):
 def start_polling():
     if start_polling.POLLINT_STARTED:
         return
+    print("POLLING!!!!!!")
     start_polling.POLLINT_STARTED = True
     updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
