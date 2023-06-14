@@ -136,7 +136,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "frontend/static")]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CUSTOMER_BOT_TOKEN = os.getenv('CUSTOMER_BOT_TOKEN', None)
+CUSTOMER_BOT_TOKEN = os.getenv('CUSTOMER_BOT_TOKEN', '6059873704:AAFkjbpapj-bHS4ltohpF3SVqeVyuTz9ME0')
 PROVIDER_TOKEN = os.getenv('PROVIDER_TOKEN', 'non-valid_some_token')
 KITCHEN_BOT_TOKEN = os.getenv('KITCHEN_BOT_TOKEN', None)
 COURIER_BOT_TOKEN = os.getenv('COURIER_BOT_TOKEN', None)
