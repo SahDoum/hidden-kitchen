@@ -22,15 +22,14 @@ def menu(request):
 
 
 
-POLLINT_STARTED = False
 def start_polling():
-    if POLLINT_STARTED:
+    if start_polling.POLLINT_STARTED:
         return
-    POLLINT_STARTED = True
+    start_polling.POLLINT_STARTED = True
     updater = Updater(token=CUSTOMER_BOT_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start_command))
     updater.start_polling()
 
-
+start_polling.POLLINT_STARTED = False
 start_polling()
