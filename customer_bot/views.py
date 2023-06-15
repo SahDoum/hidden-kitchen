@@ -81,6 +81,7 @@ def make_order(request):
     price = data.get('price', -1)
 
     print(data['order_data'])
+    print(user_id)
 
     try:
         user = User.get_telegram_user(user_id, user_hash)

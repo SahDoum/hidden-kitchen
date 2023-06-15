@@ -82,6 +82,7 @@
       Любые дополнительные запросы, детали, пожелания.
     </div>
   </div>
+  <div id="error-log">Error log</div>
 </section>
 <div class="cafe-status-wrap">
   <div class="cafe-status js-status"></div>
@@ -94,7 +95,10 @@
       var user_id = 155493213;
       try {
         user_id = Telegram.WebApp.initDataUnsafe.user.id;
-      } catch{}
+      } catch (error){
+        $("#error-log").text("Error: " + error)
+
+      }
       Cafe.init({"apiUrl":cafe_api,"userId": user_id,"userHash":null});</script>
   </body>
 </html>
