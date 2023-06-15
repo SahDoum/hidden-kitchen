@@ -86,6 +86,11 @@ class Order(models.Model):
         signals.send_order_status_to_customer(order)
         return order
 
+    def json(self):
+        # json with 
+        # to show at kitchen and to user
+        return None
+
 
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
@@ -101,6 +106,13 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+    def calculate_price_from_json(json):
+        # iterate through json
+        # calculate sum
+        # return sum
+        return -1
 
 
 # https://github.com/legionscript/deliver/tree/tutorial7
