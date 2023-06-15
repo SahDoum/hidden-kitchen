@@ -85,7 +85,7 @@ def make_order(request):
     try:
         user = User.get_telegram_user(user_id, user_hash)
     except User.DoesNotExist:
-        print("Error")
+        print("Error. User Does Not Exist")
         return HttpResponseBadRequest("User does not exists")
 
 

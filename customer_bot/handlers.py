@@ -11,8 +11,10 @@ from HiddenKitchen.settings import CUSTOMER_BOT_TOKEN
 
 
 def start_command(update: Update, context: CallbackContext):
-    user = update.effective_user
-    User.create_from_telegram(user)
+    tgUser = update.effective_user
+    user = User.create_from_telegram(tgUser)
+    print("New user:")
+    print(user)
     context.bot.send_message(chat_id=user.id, text="Welcome to the bot app!")
 
 
