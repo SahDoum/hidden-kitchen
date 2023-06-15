@@ -11,9 +11,10 @@ class User(models.Model):
     # Add other fields as needed
 
     @classmethod
-    def create_from_telegram(cls, user):
-        tgUser = cls.objects.get_or_create(chat_id=user.id)
-        return tgUser
+    def create_from_telegram(cls, tgUser):
+        print(tgUser)
+        user = cls.objects.get_or_create(chat_id=tgUser.id)
+        return user
 
     @classmethod
     def get_telegram_user(cls, user_id, user_hash):
