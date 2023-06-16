@@ -285,9 +285,10 @@ body {
   
   .cafe-order-overview {
     display: none;
+    overflow: hidden;
     font-family: var(--default-font);
     background-color: var(--bg-color);
-    transition: opacity var(--page-animation);
+    transition: all var(--page-animation);
     opacity: 0;
   }
   body.order-mode .cafe-order-overview {
@@ -558,4 +559,40 @@ body {
     from { transform: scale3d(1, 1, 1); opacity: 1; visibility: visible; }
     to   { transform: scale3d(0.5, 0.5, 1); opacity: 0; visibility: hidden; }
   }
+
+
+  .cafe-payment {
+    display: none;
+    font-family: var(--default-font);
+    background-color: var(--bg-color);
+    transition: opacity var(--page-animation);
+    opacity: 0;
+  }
+
+  body.payment-mode .cafe-order-overview {
+    opacity: 1;
+  }
+
+
+  .cafe-payment-buttons {
+    display: flex;
+    width: 80%;
+    justify-content: space-between;
+    margin: 10px auto 0;
+    position: relative;
+    transition: all var(--animation);
+  }
+
+
+  body.payment-mode .cafe-order-overview {
+    max-height: 0 !important;
+    opacity: 0 !important;
+  }
+
+
+  body.payment-mode .cafe-payment {
+    opacity: 1;
+  }
+
+
   

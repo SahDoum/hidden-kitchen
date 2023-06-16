@@ -9,7 +9,7 @@
 
 var Cafe = {
   canPay: false,
-  modeOrder: false,
+  modeOrder: 0,
   totalPrice: 0,
 
   init: function (options) {
@@ -33,6 +33,7 @@ var Cafe = {
     $(".js-item-incr-btn").on("click", Cafe.eIncrClicked);
     $(".js-item-decr-btn").on("click", Cafe.eDecrClicked);
     $(".js-order-edit").on("click", Cafe.eEditClicked);
+    $(".js-payment-edit").on("click", Cafe.ePaymentClicked);
     $(".js-status").on("click", Cafe.eStatusClicked);
     $(".js-order-comment-field").each(function () {
       autosize(this);
@@ -75,7 +76,11 @@ var Cafe = {
   },
   eEditClicked: function (e) {
     e.preventDefault();
-    Cafe.toggleMode(false);
+    Cafe.toggleMode(0);
+  },
+  ePaymentClicked: function (e) {
+    e.preventDefault();
+    Cafe.toggleMode(1);
   },
   getOrderItem: function (itemEl) {
     var id = itemEl.data("item-id");
@@ -134,7 +139,7 @@ var Cafe = {
     Cafe.updateItem(itemEl, delta);
   },
   formatPrice: function (price) {
-    return "$" + Cafe.formatNumber(price / 1000, 2, ".", ",");
+    return "₾" + price; Cafe.formatNumber(price, 2, ".", ",");
   },
   formatNumber: function (number, decimals, decPoint, thousandsSep) {
     number = (number + "").replace(/[^0-9+\-Ee.]/g, "");
@@ -192,7 +197,7 @@ var Cafe = {
       mainButton
         .setParams({
           is_visible: !!Cafe.canPay,
-          text: "VIEW ORDER",
+          text: "ЗАКАЗ",
           color: "#31b545",
         })
         .hideProgress();
@@ -224,51 +229,30 @@ var Cafe = {
   },
   toggleMode: function (mode_order) {
     Cafe.modeOrder = mode_order;
-    var anim_duration, match;
-    try {
-      anim_duration = window
-        .getComputedStyle(document.body)
-        .getPropertyValue("--page-animation-duration");
-      if ((match = /([\d\.]+)(ms|s)/.exec(anim_duration))) {
-        anim_duration = +match[1];
-        if (match[2] == "s") {
-          anim_duration *= 1000;
-        }
-      } else {
-        anim_duration = 400;
-      }
-    } catch (e) {
-      anim_duration = 400;
-    }
-    if (mode_order) {
-      var height = $(".cafe-items").height();
-      // $(".js-item-lottie").each(function () {
-      //   RLottie.setVisible(this, false);
-      // });
+    var anim_duration = 300;
+
+    if (mode_order == 2) {
+
+      var height = $(".cafe-order-overview").height();
+      $("body").addClass("payment-mode");
+      $(".cafe-order-overview").css("maxHeight", height).redraw();
+      $(".cafe-payment").show();
+
+    } else if (mode_order == 1) {
+
+      var height = $(".cafe-items").height()// || $(".cafe-order-overview").height();
+      $("body").removeClass("payment-mode");
+
       $(".cafe-order-overview").show();
-      $(".cafe-items").css("maxHeight", height).redraw();
+      if (height) $(".cafe-items").css("maxHeight", height).redraw();
       $("body").addClass("order-mode");
       $(".js-order-comment-field").each(function () {
         autosize.update(this);
       });
       Telegram.WebApp.expand();
-      setTimeout(function () {
-        // $(".js-item-lottie").each(function () {
-        //   RLottie.setVisible(this, true);
-        // });
-      }, anim_duration);
-    } else {
-      // $(".js-item-lottie").each(function () {
-      //   RLottie.setVisible(this, false);
-      // });
+    } else if (mode_order == 0) {
+
       $("body").removeClass("order-mode");
-      setTimeout(function () {
-        $(".cafe-items").css("maxHeight", "");
-        $(".cafe-order-overview").hide();
-        $(".js-item-lottie").each(function () {
-          RLottie.setVisible(this, true);
-        });
-      }, anim_duration);
     }
     Cafe.updateMainButton();
   },
@@ -282,17 +266,20 @@ var Cafe = {
     if (!Cafe.canPay || Cafe.isLoading || Cafe.isClosed) {
       return false;
     }
-    if (Cafe.modeOrder) {
+    if (Cafe.modeOrder == 1) {
+      Cafe.toggleMode(2);
+    } else if (Cafe.modeOrder == 2) {
       var comment = $(".js-order-comment-field").val();
       var params = {
         order_data: Cafe.getOrderData(),
         comment: comment,
         price: Cafe.totalPrice
       };
-      if (Cafe.userId && Cafe.userHash) {
-        params.user_id = Cafe.userId;
-        params.user_hash = Cafe.userHash;
-      }
+      // if (Cafe.userId) {
+      //   params.user_id = Cafe.userId;
+      //   params.initDataHash = Cafe.initDataHash;
+      //   params.dataCheckString = Cafe.dataCheckString;
+      // }
       Cafe.toggleLoading(true);
       Cafe.apiRequest("makeOrder", params, function (result) {
         console.log(result)
@@ -304,8 +291,8 @@ var Cafe = {
           Cafe.showStatus(result.error);
         }
       });
-    } else {
-      Cafe.toggleMode(true);
+    } else if (Cafe.modeOrder == 0) {
+      Cafe.toggleMode(1);
     }
   },
   eStatusClicked: function () {
@@ -332,11 +319,17 @@ var Cafe = {
     console.log(Cafe.apiUrl + '/' + method);
     $.ajax(apiUrl, {
       type: "POST",
-      data: $.extend(data, { _auth: authData, method: method, user_id: userId, user_hash: Cafe.userHash }),
-      //dataType: "json",
-      //xhrFields: {
-      //  withCredentials: true,
-      //},
+      data: $.extend(data, { 
+        _auth: authData,
+        method: method, 
+        user_id: userId, 
+        initDataHash: Cafe.initDataHash,
+        dataCheckString: Cafe.dataCheckString,
+      }),
+      dataType: "json",
+      xhrFields: {
+       withCredentials: true,
+      },
       success: function (result) {
         onCallback && onCallback(result);
       },

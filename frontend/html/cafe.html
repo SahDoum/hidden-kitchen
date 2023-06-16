@@ -20,7 +20,10 @@
     <link href="static/css/cafe.css" rel="stylesheet">
   </head>
   <body style="display:none">
-    <section class="cafe-page cafe-items">
+  
+
+
+  <section class="cafe-page cafe-items">
     {% load static %}
 
     {% for item in menu_items %}
@@ -48,6 +51,8 @@
     {% endfor %}
 <div class="cafe-item-shadow"></div><div class="cafe-item-shadow"></div><div class="cafe-item-shadow"></div><div class="cafe-item-shadow"></div>
 </section>
+
+
 <section class="cafe-page cafe-order-overview">
   <div class="cafe-block">
     <div class="cafe-order-header-wrap">
@@ -84,6 +89,32 @@
   </div>
   <div id="error-log">Error log</div>
 </section>
+
+
+
+<section class="cafe-page cafe-payment">
+  <div class="cafe-block">
+    <div class="cafe-order-header-wrap">
+      <h2 class="cafe-order-header">Оплата</h2>
+      <span class="cafe-order-edit js-payment-edit">Назад</span>
+    </div>
+
+  <div class="cafe-payment-buttons">
+    <button class="cafe-payment-button js-item-card-btn button-item ripple-handler">
+      <span class="button-item-label">По карте</span>
+      <span class="ripple-mask"><span class="ripple"></span></span>
+    </button>
+    <button class="cafe-payment-button js-item-cash-btn button-item ripple-handler">
+      <span class="button-item-label">Наличными</span>
+      <span class="ripple-mask"><span class="ripple"></span></span>
+    </button>
+  </div>
+
+  </div>
+</section>
+
+
+
 <div class="cafe-status-wrap">
   <div class="cafe-status js-status"></div>
 </div>
@@ -91,15 +122,22 @@
     <script src="https://tg.dev/js/tgsticker.js?27"></script>
     <script src="static/js/cafe.js"></script>
     <script>
-      var cafe_api = `${window.location.origin}/customer`
-      var user_id = 155493213;
-      try {
-        user_id = Telegram.WebApp.initDataUnsafe.user.id;
-      } catch (error){
-        $("#error-log").text("Error: " + error)
 
-      }
-      Cafe.init({"apiUrl":cafe_api,"userId": user_id,"userHash":null});</script>
+      // var hiddenUserId = {{ user_id }};
+      // var userId = JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get('user')).id;
+      // let initData = new URLSearchParams(window.Telegram.WebApp.initData);
+      // var initDataHash = initData.get('hash');
+      // initData.delete('hash');
+      // initData.sort();
+      // var dataCheckString = initData.toString();
+
+      var cafe_api = "";
+      var userId = 0;
+      var initDataHash = 0;
+      var dataCheckString = 0;
+
+      var cafe_api = `${window.location.origin}/customer`
+      Cafe.init({"apiUrl":cafe_api,"userId": userId, "initDataHash":initDataHash, "dataCheckString": dataCheckString});</script>
   </body>
 </html>
 <!-- page generated in 1.46ms -->
