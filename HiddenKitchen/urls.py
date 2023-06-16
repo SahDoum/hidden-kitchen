@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from customer_bot.views import menu, make_order
+import kitchen_bot.views
 
 def test(request):
     return "Hello world!"

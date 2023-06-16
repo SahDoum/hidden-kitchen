@@ -3,6 +3,7 @@ from django.template import loader
 import telegram
 from telegram import ParseMode
 from notifications.bot import customer_bot, kitchen_bot, courier_bot
+from HiddenKitchen.settings import KITCHEN_ID
 
 
 
@@ -31,7 +32,7 @@ def send_telegram_message(
             **kwargs
         )
     except telegram.error.TelegramError as ex:
-        log.warning(f"Telegram error: {ex}")
+        print(f"Telegram error: {ex}")
 
 
 def send_customer_message(
@@ -50,7 +51,20 @@ def send_customer_message(
         **kwargs
         )
 
-def send_kitchen_message():
+def send_kitchen_message(
+    text: str,
+    parse_mode: ParseMode = telegram.ParseMode.HTML,
+    disable_preview: bool = True,
+    **kwargs
+):
+    send_telegram_message(
+        kitchen_bot,
+        KITCHEN_ID,
+        text,
+        parse_mode,
+        disable_preview,
+        **kwargs
+        )
     pass
 
 def send_courier_message():

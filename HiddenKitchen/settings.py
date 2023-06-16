@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "orders.apps.OrdersConfig",
     "users.apps.UsersConfig",
     "customer_bot.apps.CustomerBotConfig",
+    "kitchen_bot.apps.KitchenBotConfig",
     "notifications.apps.NotificationsConfig",
 
 ]
@@ -140,3 +141,4 @@ CUSTOMER_BOT_TOKEN = os.getenv('CUSTOMER_BOT_TOKEN', '6059873704:AAFkjbpapj-bHS4
 PROVIDER_TOKEN = os.getenv('PROVIDER_TOKEN', 'non-valid_some_token')
 KITCHEN_BOT_TOKEN = os.getenv('KITCHEN_BOT_TOKEN', None)
 COURIER_BOT_TOKEN = os.getenv('COURIER_BOT_TOKEN', None)
+KITCHEN_ID = 155493213

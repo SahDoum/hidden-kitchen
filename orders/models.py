@@ -60,6 +60,11 @@ class Order(models.Model):
     def accept(self):
         selt.status = OS_ACCEPTED
 
+    def cancel(self):
+        self.status = Order.Statuses.CANCELED
+        self.save()
+        signals.send_order_status_to_customer(self)
+
     def ready(self):
         selt.status = OS_READY
         # send notification to currier
@@ -84,6 +89,7 @@ class Order(models.Model):
         # check menu with price
         order = cls.objects.create(user=user, items=items, comment=comment, price=price)
         signals.send_order_status_to_customer(order)
+        signals.send_new_order_to_kitchen(order)
         return order
 
     def json(self):

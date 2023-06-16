@@ -1,3 +1,5 @@
+import telegram
+
 from notifications.common import send_customer_message, send_kitchen_message, send_courier_message
 from notifications.common import render_html_message
 
@@ -12,12 +14,26 @@ def send_order_status_to_customer(order):
 
 
 def send_order_status_to_kitchen(order):
-    chat = KITCHEN_ID
-    send_kitchen_message(chat,         
+    send_kitchen_message(         
         render_html_message(
             template="order_status_kitchen.html",
             order=order,
         ),)
+
+
+def send_new_order_to_kitchen(order):
+    send_kitchen_message(         
+        render_html_message(
+            template="order_status_kitchen.html",
+            order=order,
+        ),
+        reply_markup=telegram.InlineKeyboardMarkup([
+                [
+                    telegram.InlineKeyboardButton("❌ Отказать", callback_data=f"cancel_order:{order.id}"),
+                    telegram.InlineKeyboardButton("🌭 Готовить", callback_data=f"accept_order:{order.id}"),
+                ],
+            ])
+        )
 
 
 def send_order_status_to_courier(order):
@@ -35,6 +51,12 @@ def send_order_status_to_courier(order):
 # 2. menu field in order
 # 3. 3 bots, 3 types signals
 # 4. notifications with buttons
+
+# 5. Nice views
+# 6. Remove debug lops
+# 7. Check exceptions
+# 8. More buttons
+# 9. Add map
 
 # ^ it's skeleton for business logic
 # next step -- business logic based on telegram messages
