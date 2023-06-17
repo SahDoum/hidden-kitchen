@@ -17,24 +17,11 @@ def menu(request):
     
     if user_id == None:
         return HttpResponse("Bad Request", status=400)
-    # return render(request, "menu.html")
+
     return render(request, "cafe.html", {
         "menu_items": MenuItem.objects.all(),
         "user_id": user_id,
     })
-
-
-def create_order_cash(request):
-    pass
-
-    # get info from request
-    # get user from request
-    # get items with request
-    # get price
-    # validate price
-    info = ""
-    Order.create_from_telegram(info, cash_payment=True)
-    return HttpResponse(json.dumps({"desc":"fine"}), content_type="application/json")
 
 
 def get_user_info(request):
@@ -47,17 +34,23 @@ def get_user_info(request):
 
 def create_order_from_request(request):
     data = request.POST
-    print(data)
 
     init_data_hash = data.get('initDataHash', 0)
     data_check_string = data.get('dataCheckString', 0)
 
-    user_id = data['user_id']
-    user_hash = data['user_hash']
+    user_id = data.get('user_id', 0)
+    user_hash = data.get('user_hash', 0)
     price = data.get('price', -1)
 
+    print("Request data:")
+    print(init_data_hash)
+    print(data_check_string)
+    print(user_id)
+    print(user_hash)
+
     user = User.get_telegram_user(user_id, user_hash)
-    order = Order.create_from_telegram(user, items=data['order_data'], comment=data['comment'], price=price)
+    order = Order.create_from_telegram(user, items=json.loads(data['order_data']), comment=data['comment'], price=price)
+    order.pricesSequence()
 
     return order
 
@@ -69,20 +62,20 @@ def create_invoice(request):
         print(f"Error occurs: {ex}")
         return HttpResponseBadRequest("Error")
 
-    if description == None or payload == None or prices == None:
-        return HttpResponse("Bad Request", status=400)
+    # if description == None or payload == None or prices == None:
+    #     return HttpResponse("Bad Request", status=400)
 
     invoice = bot.createInvoiceLink(
-        title="Заказ их Хидден",
+        title="Заказ из Хидден",
         description="Еда, которая насытит тело и дух",
-        payload= "hidden-bot-payment",
+        payload= "hidden-bot-payment", # add order id
         provider_token=PROVIDER_TOKEN,
         currency='GEL',
         prices=order.pricesSequence(),
         photo_url= f'{APP_SERVER}/static/img/menu.png',
     )
 
-    return HttpResponse(invoice)
+    return HttpResponse(json.dumps({"invoice":invoice}), content_type="application/json")
 
 
 def make_order(request):

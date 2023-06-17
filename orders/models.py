@@ -1,8 +1,11 @@
 from django.db import models
 from uuid import uuid4
+import json
+
 from django.utils.translation import gettext_lazy as _
 import notifications.signals as signals
 
+from telegram import LabeledPrice
 from users.models import User
 
 
@@ -82,17 +85,19 @@ class Order(models.Model):
         # send notification to kitchen?
 
     @classmethod
-    def create_from_telegram(cls, user, items=[], price=-1, comment=None):
+    def create_from_telegram(cls, user, items, price=-1, comment=None):
         # check menu with price
         order = cls.objects.create(user=user, items=items, comment=comment, price=price)
         signals.send_order_status_to_customer(order)
         signals.send_new_order_to_kitchen(order)
         return order
 
-    def json(self):
-        # json with 
-        # to show at kitchen and to user
-        return None
+    def pricesSequence(self):
+        seq = []
+        for code, count in self.items.items():
+            item = MenuItem.objects.get(code=code)
+            seq.append(LabeledPrice(item.name, item.price))
+        return seq
 
 
     def __str__(self):
@@ -109,13 +114,6 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
-
-
-    def calculate_price_from_json(json):
-        # iterate through json
-        # calculate sum
-        # return sum
-        return -1
 
 
 # https://github.com/legionscript/deliver/tree/tutorial7

@@ -18,7 +18,7 @@ def start_command(update: Update, context: CallbackContext) -> None:
     context.bot.send_message(chat_id=tgUser.id, text="Добро пожаловать в HiddenKitchen!", reply_markup=inline_keyboard_markup)
 
 
-def successful_payment_callback(update: Update) -> None:
+def successful_payment_callback(update: Update, _) -> None:
     """Confirms the successful payment."""
     # do something after successfully receiving payment?
     payment = update.message.successful_payment

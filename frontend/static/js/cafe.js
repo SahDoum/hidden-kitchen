@@ -117,8 +117,8 @@ var Cafe = {
     Cafe.apiRequest("makeOrderInvoice", params, function (result) {
       console.log(result)
       Cafe.toggleLoading(false);
-      if (result.ok) {
-        window.Telegram.WebApp.openInvoice(result);
+      if (result.invoice) {
+        window.Telegram.WebApp.openInvoice(result.invoice);
       }
       if (result.error) {
         Cafe.showStatus(result.error);
@@ -260,13 +260,13 @@ var Cafe = {
     Cafe.updateMainButton();
   },
   getOrderData: function () {
-    var order_data = [];
+    var order_data = {};
     $(".js-item").each(function () {
       var itemEl = $(this);
       var id = itemEl.data("item-id");
       var count = +itemEl.data("item-count") || 0;
       if (count > 0) {
-        order_data.push({ id: id, count: count });
+        order_data[id] = count;
       }
     });
     return JSON.stringify(order_data);
