@@ -110,7 +110,7 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.URLField(null=False)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.IntegerField()
 
     def __str__(self):
         return self.name
