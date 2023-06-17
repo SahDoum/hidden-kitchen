@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, ContextTypes, Filters, PreCheckoutQueryHandler
 
 from users.models import User
@@ -11,9 +11,9 @@ def start_command(update: Update, context: CallbackContext) -> None:
     tgUser = update.effective_user
     user = User.create_from_telegram(tgUser)
 
-    inline_keyboard_markup = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton("Меню", web_app=WebAppInfo(url=f'{APP_SERVER}/menu?user_id={user.id}'))],
-    ])
+    # inline_keyboard_markup = InlineKeyboardMarkup(inline_keyboard=[
+    #     [InlineKeyboardButton("Меню", web_app=WebAppInfo(url=f'{APP_SERVER}/menu?user_id={user.id}'))],
+    # ])
 
     context.bot.send_message(chat_id=tgUser.id, text="Добро пожаловать в HiddenKitchen!", reply_markup=inline_keyboard_markup)
 

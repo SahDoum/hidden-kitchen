@@ -47,6 +47,7 @@ def get_user_info(request):
 
 def create_order_from_request(request):
     data = request.POST
+    print(data)
 
     init_data_hash = data.get('initDataHash', 0)
     data_check_string = data.get('dataCheckString', 0)
@@ -64,7 +65,7 @@ def create_order_from_request(request):
 def create_invoice(request):
     try:
         order = create_order_from_request(request)
-    except ex:
+    except Exception as ex:
         print(f"Error occurs: {ex}")
         return HttpResponseBadRequest("Error")
 
@@ -87,7 +88,7 @@ def create_invoice(request):
 def make_order(request):
     try:
         order = create_order_from_request(request)
-    except ex:
+    except Exception as ex:
         print(f"Error occurs: {ex}")
         return HttpResponseBadRequest("Error")
 

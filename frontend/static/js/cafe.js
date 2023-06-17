@@ -103,7 +103,7 @@ var Cafe = {
       if (result.error) {
         Cafe.showStatus(result.error);
       }
-    }
+    });
   },
 
   ePayCard: function(e) {
@@ -123,7 +123,7 @@ var Cafe = {
       if (result.error) {
         Cafe.showStatus(result.error);
       }
-    }
+    });
   },
 
   getOrderItem: function (itemEl) {

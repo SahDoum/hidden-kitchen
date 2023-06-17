@@ -28,7 +28,7 @@ urlpatterns = [
     path('test/', test),
     path('menu.html', menu),
     path('customer/makeOrderCash', make_order),
-    path('customer/makeOrderCard', create_invoice),
+    path('customer/makeOrderInvoice', create_invoice),
 ]
 
 
