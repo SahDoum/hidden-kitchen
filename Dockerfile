@@ -13,11 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire project directory to the container
 COPY . .
 
-# Install dotenv package
-RUN pip install python-dotenv
-
 # Expose the port on which Django runs
 EXPOSE 8000
 
 # Load environment variables from .env file and export them
-CMD ["bash", "-c", "source .env && python3 manage.py runserver 0.0.0.0:8000"]
+CMD ["bash", "-c", "python3 manage.py runserver 0.0.0.0:8000"]
