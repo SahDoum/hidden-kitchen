@@ -73,5 +73,3 @@ def init_polling():
 
     print("Starting polling")
     updater.start_polling()
-
-init_polling()

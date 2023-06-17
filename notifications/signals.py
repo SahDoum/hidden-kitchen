@@ -49,6 +49,7 @@ def send_order_status_to_courier(order):
 # ToDo 
 
 # 4. kitchen states invoice!!
+# 4. User Hash
 # 5. Nice views
 # 7. Check exceptions
 # 8. More buttons

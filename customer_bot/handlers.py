@@ -11,10 +11,6 @@ def start_command(update: Update, context: CallbackContext) -> None:
     tgUser = update.effective_user
     user = User.create_from_telegram(tgUser)
 
-    # inline_keyboard_markup = InlineKeyboardMarkup(inline_keyboard=[
-    #     [InlineKeyboardButton("Меню", web_app=WebAppInfo(url=f'{APP_SERVER}/menu?user_id={user.id}'))],
-    # ])
-
     context.bot.send_message(chat_id=tgUser.id, text="Добро пожаловать в HiddenKitchen!", reply_markup=inline_keyboard_markup)
 
 
@@ -58,5 +54,3 @@ def init_polling():
 
     print("Starting polling")
     updater.start_polling()
-
-init_polling()

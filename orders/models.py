@@ -38,56 +38,36 @@ class Order(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-
+    pretty_id = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=2, choices=Statuses.choices, default=OS_WAIT)
 
-    created_on = models.DateTimeField(auto_now_add=True, blank=True)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
-    user_cash = models.DecimalField(max_digits=7, decimal_places=2, default=True)
-    # items = models.ManyToManyField('MenuItem', related_name='order', blank=True)
     items = models.JSONField(blank=False)
+    is_inside = models.BooleanField(blank=False)
+    is_cash_payment = models.BooleanField(blank=False)
+    price = models.IntegerField()
+    user_cash = models.IntegerField()
 
     comment = models.CharField(max_length=200, blank=True)
     review = models.CharField(max_length=200, blank=True)
+
+    created_on = models.DateTimeField(auto_now_add=True, blank=True)
     err_msg = models.CharField(max_length=200, blank=True)
 
-    @classmethod
-    def create_order(cls, user, menu_items, comment=None, user_cash=None):
-        # Order.objects.create();
-        pass
-
-    def accept(self):
-        selt.status = OS_ACCEPTED
-
-    def cancel(self):
-        self.status = Order.Statuses.CANCELED
-        self.save()
-        signals.send_order_status_to_customer(self)
-
-    def ready(self):
-        selt.status = OS_READY
-        # send notification to currier
-        # send notification to user
-
-    def delivery(self):
-        selt.status = OS_READY
-        # send notification to user
-
-    def done(self):
-        selt.status = OS_DONE
-        # send notification to user
-
-    def error(self, err_msg):
-        self.status = OS_ERROR
-        self.err_msg = err_msg
-        # send notification to user
-        # send notification to kitchen?
 
     @classmethod
-    def create_from_telegram(cls, user, items, price=-1, comment=None):
-        # check menu with price
-        order = cls.objects.create(user=user, items=items, comment=comment, price=price)
+    def create_from_telegram(cls, user, items, is_inside, is_cash_payment, price=-1, user_cash=-1, comment=None):
+        pretty_id = cls.objects.filter(is_inside=is_inside).count()
+        order = cls.objects.create(
+            pretty_id=pretty_id%100,
+            user=user, 
+            items=items, 
+            comment=comment, 
+            price=price,
+            is_inside=is_inside,
+            is_cash_payment=is_cash_payment,
+            user_cash=user_cash,
+        )
         signals.send_order_status_to_customer(order)
         signals.send_new_order_to_kitchen(order)
         return order
@@ -96,12 +76,34 @@ class Order(models.Model):
         seq = []
         for code, count in self.items.items():
             item = MenuItem.objects.get(code=code)
-            seq.append(LabeledPrice(item.name, item.price))
+            seq.append(LabeledPrice(f'{item.name} x{item.count}', item.price))
         return seq
+
+    @property
+    def description(self):
+        desc = []
+        for code, count in self.items.items():
+            item = MenuItem.objects.get(code=code)
+            desc += f'{item.name} x{item.count}\n'
+        return desc
+
+    @property
+    def _get_id(self):
+        letter = 'A' if self.is_inside else 'B'
+        return letter + self.pretty_id
 
 
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
+
+
+    def accept(self):
+        selt.status = OS_ACCEPTED
+
+    def cancel(self):
+        self.status = Order.Statuses.CANCELED
+        self.save()
+        signals.send_order_status_to_customer(self)
 
 
 class MenuItem(models.Model):
