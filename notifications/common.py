@@ -19,7 +19,7 @@ def send_telegram_message(
     bot,
     chat_id: int,
     text: str,
-    parse_mode: ParseMode = telegram.ParseMode.HTML,
+    parse_mode: ParseMode = ParseMode.HTML,
     disable_preview: bool = True,
     **kwargs
 ):
@@ -38,7 +38,7 @@ def send_telegram_message(
 def send_customer_message(
     chat_id: int,
     text: str,
-    parse_mode: ParseMode = telegram.ParseMode.HTML,
+    parse_mode: ParseMode = ParseMode.HTML,
     disable_preview: bool = True,
     **kwargs
 ):
@@ -53,7 +53,7 @@ def send_customer_message(
 
 def send_kitchen_message(
     text: str,
-    parse_mode: ParseMode = telegram.ParseMode.HTML,
+    parse_mode: ParseMode = ParseMode.HTML,
     disable_preview: bool = True,
     **kwargs
 ):

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from customer_bot.views import menu, make_order
+from customer_bot.views import menu, make_order, create_invoice
 import kitchen_bot.views
 
 def test(request):
@@ -27,7 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', test),
     path('menu.html', menu),
-    path('customer/makeOrder', make_order)
+    path('customer/makeOrderCash', make_order),
+    path('customer/makeOrderCard', create_invoice),
 ]
 
 

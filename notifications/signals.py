@@ -47,13 +47,9 @@ def send_order_status_to_courier(order):
 
 
 # ToDo 
-# 1. menu from file
-# 2. menu field in order
-# 3. 3 bots, 3 types signals
-# 4. notifications with buttons
 
+# 4. kitchen states invoice!!
 # 5. Nice views
-# 6. Remove debug lops
 # 7. Check exceptions
 # 8. More buttons
 # 9. Add map

@@ -1,10 +1,6 @@
 from django.db import models
 from uuid import uuid4
-
 from django.utils.translation import gettext_lazy as _
-
-# from django.contrib.postgres.fields import ArrayField
-
 import notifications.signals as signals
 
 from users.models import User
@@ -39,6 +35,7 @@ class Order(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=2, choices=Statuses.choices, default=OS_WAIT)
 

@@ -35,6 +35,10 @@ var Cafe = {
     $(".js-order-edit").on("click", Cafe.eEditClicked);
     $(".js-payment-edit").on("click", Cafe.ePaymentClicked);
     $(".js-status").on("click", Cafe.eStatusClicked);
+
+    $(".js-item-cash-btn").on("click", Cafe.ePayCash);
+    $(".js-item-card-btn").on("click", Cafe.ePayCard);
+
     $(".js-order-comment-field").each(function () {
       autosize(this);
     });
@@ -82,6 +86,46 @@ var Cafe = {
     e.preventDefault();
     Cafe.toggleMode(1);
   },
+  ePayCash: function(e) {
+    var comment = $(".js-order-comment-field").val();
+    var params = {
+      order_data: Cafe.getOrderData(),
+      comment: comment,
+      price: Cafe.totalPrice
+    };
+    Cafe.toggleLoading(true);
+    Cafe.apiRequest("makeOrderCash", params, function (result) {
+      console.log(result)
+      Cafe.toggleLoading(false);
+      if (result.ok) {
+        Telegram.WebApp.close();
+      }
+      if (result.error) {
+        Cafe.showStatus(result.error);
+      }
+    }
+  },
+
+  ePayCard: function(e) {
+    var comment = $(".js-order-comment-field").val();
+    var params = {
+      order_data: Cafe.getOrderData(),
+      comment: comment,
+      price: Cafe.totalPrice
+    };
+    Cafe.toggleLoading(true);
+    Cafe.apiRequest("makeOrderInvoice", params, function (result) {
+      console.log(result)
+      Cafe.toggleLoading(false);
+      if (result.ok) {
+        window.Telegram.WebApp.openInvoice(result);
+      }
+      if (result.error) {
+        Cafe.showStatus(result.error);
+      }
+    }
+  },
+
   getOrderItem: function (itemEl) {
     var id = itemEl.data("item-id");
     return $(".js-order-item").filter(function () {
