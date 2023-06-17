@@ -11,7 +11,7 @@ def start_command(update: Update, context: CallbackContext) -> None:
     tgUser = update.effective_user
     user = User.create_from_telegram(tgUser)
 
-    context.bot.send_message(chat_id=tgUser.id, text="Добро пожаловать в HiddenKitchen!", reply_markup=inline_keyboard_markup)
+    context.bot.send_message(chat_id=tgUser.id, text="Добро пожаловать в HiddenKitchen!")
 
 
 def successful_payment_callback(update: Update, _) -> None:

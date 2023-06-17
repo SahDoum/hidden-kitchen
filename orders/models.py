@@ -76,19 +76,19 @@ class Order(models.Model):
         seq = []
         for code, count in self.items.items():
             item = MenuItem.objects.get(code=code)
-            seq.append(LabeledPrice(f'{item.name} x{item.count}', item.price))
+            seq.append(LabeledPrice(f'{item.name} x{count}', item.price*count))
         return seq
 
     @property
     def description(self):
-        desc = []
+        desc = ''
         for code, count in self.items.items():
             item = MenuItem.objects.get(code=code)
-            desc += f'{item.name} x{item.count}\n'
+            desc += f'{item.name} x{count}\n'
         return desc
 
     @property
-    def _get_id(self):
+    def number(self):
         letter = 'A' if self.is_inside else 'B'
         return letter + self.pretty_id
 
