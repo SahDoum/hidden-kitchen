@@ -134,18 +134,14 @@
     <script src="static/js/cafe.js"></script>
     <script>
 
-      // var hiddenUserId = {{ user_id }};
-      // var userId = JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get('user')).id;
-      // let initData = new URLSearchParams(window.Telegram.WebApp.initData);
-      // var initDataHash = initData.get('hash');
-      // initData.delete('hash');
-      // initData.sort();
-      // var dataCheckString = initData.toString();
+      var userId = JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get('user')).id;
 
-      var cafe_api = "";
-      var userId = 0;
-      var initDataHash = 0;
-      var dataCheckString = 0;
+      let initData = new URLSearchParams(window.Telegram.WebApp.initData);
+      var initDataHash = initData.get('hash');
+
+      initData.delete('hash');
+      initData.sort();
+      var dataCheckString = initData.toString();
 
       var cafe_api = `${window.location.origin}/customer`
       Cafe.init({"apiUrl":cafe_api,"userId": userId, "initDataHash":initDataHash, "dataCheckString": dataCheckString});</script>

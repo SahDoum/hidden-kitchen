@@ -35,7 +35,7 @@ var Cafe = {
     Telegram.WebApp.ready();
     Cafe.apiUrl = options.apiUrl;
     Cafe.userId = options.userId;
-    Cafe.userHash = options.userHash;
+    Cafe.initDataHash = options.initDataHash;
     Cafe.initLotties();
     $("body").show();
     if (
