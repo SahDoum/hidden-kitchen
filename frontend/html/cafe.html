@@ -36,7 +36,7 @@
         </div>
         <div class="cafe-item-label">
           <span class="cafe-item-title">{{ item.name }}</span>
-          <span class="cafe-item-price">₾{{ item.price }}</span>
+          <span class="cafe-item-price">₾{{ item.decimal_price }}</span>
         </div>
         <div class="cafe-item-buttons">
           <button class="cafe-item-decr-button js-item-decr-btn button-item ripple-handler">
@@ -75,7 +75,7 @@
           </div>
           <div class="cafe-order-item-description">{{ item.description }}</div>
         </div>
-        <div class="cafe-order-item-price js-order-item-price">₾{{ item.price }}</div>
+        <div class="cafe-order-item-price js-order-item-price">₾{{ item.decimal_price }}</div>
       </div>
     {% endfor %}
 
