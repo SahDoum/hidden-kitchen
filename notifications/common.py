@@ -3,7 +3,7 @@ from django.template import loader
 import telegram
 from telegram import ParseMode
 from notifications.bot import customer_bot, kitchen_bot, courier_bot
-from HiddenKitchen.settings import KITCHEN_ID
+import HiddenKitchen.settings as settings
 
 
 
@@ -59,7 +59,7 @@ def send_kitchen_message(
 ):
     send_telegram_message(
         kitchen_bot,
-        KITCHEN_ID,
+        settings.KITCHEN_ID,
         text,
         parse_mode,
         disable_preview,

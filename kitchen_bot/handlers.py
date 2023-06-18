@@ -7,7 +7,8 @@ from users.models import User
 from orders.models import Order
 
 from telegram.ext import Updater
-from HiddenKitchen.settings import KITCHEN_BOT_TOKEN, KITCHEN_ID
+from HiddenKitchen.settings import KITCHEN_BOT_TOKEN
+import HiddenKitchen.settings as settings
 from notifications.common import render_html_message
 from telegram import ParseMode
 
@@ -22,9 +23,8 @@ def start_command(update: Update, context: CallbackContext):
 
 
 def set_kitchen(update: Update, context: CallbackContext):
-    global KITCHEN_ID
-    KITCHEN_ID = update.effective_user.id
-    context.bot.send_message(chat_id=KITCHEN_ID, text="Update Id")
+    settings.KITCHEN_ID = update.effective_user.id
+    context.bot.send_message(chat_id=settings.KITCHEN_ID, text="Update Id")
 
 
 def cancel_order(update: Update, context: CallbackContext):
