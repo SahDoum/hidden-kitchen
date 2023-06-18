@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from telegram import Update
+import telegram
 from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
 
 from users.models import User
@@ -8,6 +9,7 @@ from orders.models import Order
 from telegram.ext import Updater
 from HiddenKitchen.settings import KITCHEN_BOT_TOKEN, KITCHEN_ID
 from notifications.common import render_html_message
+from telegram import ParseMode
 
 
 
@@ -29,38 +31,25 @@ def cancel_order(update: Update, context: CallbackContext):
     _, order_id = update.callback_query.data.split(":", 1)
 
     order = Order.objects.get(id=order_id)
-
-    message = update.callback_query.message_id
-    # if order.status == Order.Statuses.CANCELED:
-    #     update.effective_chat.send_message(
-    #         f"Заказ «{order.id}» уже был отклонен"
-    #     )
-    #     update.callback_query.edit_message_reply_markup(reply_markup=None)
-    #     return None
-
     order.cancel()
 
-    #update.callback_query.edit_message_reply_markup(reply_markup=None)
     update.callback_query.edit_message_text(   
         render_html_message(
             template="order_status_kitchen.html",
             order=order,
         ),
-        reply_markup=None)
+        reply_markup=None,
+        parse_mode=ParseMode.HTML
+    )
     return None
 
 
 def accept_order(update: Update, context: CallbackContext):
     _, order_id = update.callback_query.data.split(":", 1)
     order = Order.objects.get(id=order_id)
-    
     # Add checks later
-
     order.accept()
 
-    update.effective_chat.send_message(
-        f"Заказ «{order.id}» отклонен"
-    )
     update.callback_query.edit_message_text(   
         render_html_message(
             template="order_status_kitchen.html",
@@ -70,7 +59,10 @@ def accept_order(update: Update, context: CallbackContext):
                 [
                     telegram.InlineKeyboardButton("🏃‍♀️ Отправить с курьером", callback_data=f"delivery_order:{order.id}"),
                 ],
-            ]))
+            ])
+        parse_mode=ParseMode.HTML
+    )
+
     return None
 
 
@@ -84,7 +76,9 @@ def delivery_order(update: Update, context: CallbackContext):
             template="order_status_kitchen.html",
             order=order,
         ),
-        reply_markup=None)
+        reply_markup=None,
+        parse_mode=ParseMode.HTML
+    )
 
 
 

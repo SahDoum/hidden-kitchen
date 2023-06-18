@@ -68,7 +68,7 @@ class Order(models.Model):
             is_cash_payment=is_cash_payment,
             user_cash=user_cash,
         )
-        signals.send_order_status_to_customer(order)
+        signals.send_order_to_customer(order)
         signals.send_new_order_to_kitchen(order)
         return order
 
@@ -100,7 +100,7 @@ class Order(models.Model):
     def accept(self):
         self.status = Order.Statuses.ACCEPTED
         self.save()
-        signals.send_created_order_customer(self)
+        signals.send_order_status_to_customer(self)
 
     def delivery(self):
         self.status = Order.Statuses.DELIVERY
