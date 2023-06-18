@@ -12,6 +12,14 @@ def send_order_status_to_customer(order):
             order=order,
         ),)
 
+def send_created_order_customer(order):
+    chat = order.user.chat_id
+    send_customer_message(chat,         
+        render_html_message(
+            template="order_to_customer.html",
+            order=order,
+        ),)
+
 
 def send_order_status_to_kitchen(order):
     send_kitchen_message(         

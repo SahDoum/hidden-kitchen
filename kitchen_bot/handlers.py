@@ -7,6 +7,8 @@ from orders.models import Order
 
 from telegram.ext import Updater
 from HiddenKitchen.settings import KITCHEN_BOT_TOKEN, KITCHEN_ID
+from notifications.common import render_html_message
+
 
 
 def start_command(update: Update, context: CallbackContext):
@@ -18,46 +20,72 @@ def start_command(update: Update, context: CallbackContext):
 
 
 def set_kitchen(update: Update, context: CallbackContext):
+    global KITCHEN_ID
     KITCHEN_ID = update.effective_user.id
     context.bot.send_message(chat_id=KITCHEN_ID, text="Update Id")
 
 
 def cancel_order(update: Update, context: CallbackContext):
     _, order_id = update.callback_query.data.split(":", 1)
+
     order = Order.objects.get(id=order_id)
-    if order.status == Order.Statuses.CANCELED:
-        update.effective_chat.send_message(
-            f"Заказ «{order.id}» уже был отклонен"
-        )
-        update.callback_query.edit_message_reply_markup(reply_markup=None)
-        return None
+
+    message = update.callback_query.message_id
+    # if order.status == Order.Statuses.CANCELED:
+    #     update.effective_chat.send_message(
+    #         f"Заказ «{order.id}» уже был отклонен"
+    #     )
+    #     update.callback_query.edit_message_reply_markup(reply_markup=None)
+    #     return None
 
     order.cancel()
 
-    update.effective_chat.send_message(
-        f"Заказ «{order.id}» отклонен"
-    )
-    update.callback_query.edit_message_reply_markup(reply_markup=None)
+    #update.callback_query.edit_message_reply_markup(reply_markup=None)
+    update.callback_query.edit_message_reply_text(   
+        render_html_message(
+            template="order_status_kitchen.html",
+            order=order,
+        ),
+        reply_markup=None)
     return None
 
 
 def accept_order(update: Update, context: CallbackContext):
     _, order_id = update.callback_query.data.split(":", 1)
     order = Order.objects.get(id=order_id)
-    if order.status == Order.Statuses.CANCELED:
-        update.effective_chat.send_message(
-            f"Заказ «{order.id}» уже был отклонен"
-        )
-        update.callback_query.edit_message_reply_markup(reply_markup=None)
-        return None
+    
+    # Add checks later
 
-    order.cancel()
+    order.accept()
 
     update.effective_chat.send_message(
         f"Заказ «{order.id}» отклонен"
     )
-    update.callback_query.edit_message_reply_markup(reply_markup=None)
+    update.callback_query.edit_message_reply_text(   
+        render_html_message(
+            template="order_status_kitchen.html",
+            order=order,
+        ),
+        reply_markup=telegram.InlineKeyboardMarkup([
+                [
+                    telegram.InlineKeyboardButton("🏃‍♀️ Отправить с курьером", callback_data=f"delivery_order:{order.id}"),
+                ],
+            ]))
     return None
+
+
+def delivery_order(update: Update, context: CallbackContext):
+    _, order_id = update.callback_query.data.split(":", 1)
+    order = Order.objects.get(id=order_id)
+
+    order.delivery()
+    update.callback_query.edit_message_reply_text(   
+        render_html_message(
+            template="order_status_kitchen.html",
+            order=order,
+        ),
+        reply_markup=None)
+
 
 
 updater = Updater(token=KITCHEN_BOT_TOKEN, use_context=True)
@@ -69,6 +97,7 @@ def init_polling():
 
     dispatcher.add_handler(CallbackQueryHandler(cancel_order, pattern=r"^cancel_order:.+"))
     dispatcher.add_handler(CallbackQueryHandler(accept_order, pattern=r"^accept_order:.+"))
+    dispatcher.add_handler(CallbackQueryHandler(accept_order, pattern=r"^delivery_order:.+"))
 
 
     print("Starting polling")

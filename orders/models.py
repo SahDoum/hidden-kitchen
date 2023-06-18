@@ -59,7 +59,7 @@ class Order(models.Model):
     def create_from_telegram(cls, user, items, is_inside, is_cash_payment, price=-1, user_cash=-1, comment=None):
         pretty_id = cls.objects.filter(is_inside=is_inside).count()
         order = cls.objects.create(
-            pretty_id=pretty_id%100,
+            pretty_id=pretty_id%999 + 1,
             user=user, 
             items=items, 
             comment=comment, 
@@ -98,7 +98,14 @@ class Order(models.Model):
 
 
     def accept(self):
-        selt.status = OS_ACCEPTED
+        self.status = Order.Statuses.ACCEPTED
+        self.save()
+        signals.send_created_order_customer(self)
+
+    def delivery(self):
+        self.status = Order.Statuses.DELIVERY
+        self.save()
+        signals.send_order_status_to_customer(self)
 
     def cancel(self):
         self.status = Order.Statuses.CANCELED

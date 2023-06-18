@@ -37,7 +37,7 @@ def precheckout_callback(update: Update, _: CallbackContext) -> None:
     query = update.pre_checkout_query
     code, uid_str = query.invoice_payload.split('@', 1)
     # check the payload, is this from your bot?
-    if query.invoice_payload.split('@', 1) != 'hbp':
+    if code != 'hpb':
         # answer False pre_checkout_query
         query.answer(ok=False, error_message="Something went wrong...")
 
