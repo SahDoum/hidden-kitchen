@@ -1,1 +1,1 @@
-Ваш заказ {{ order.number }}{% if order.status == 'wt' %} ожидает подтверждения {% endif %} {% if order.status == 'ac' %} начали готовить {% endif %}{% if order.status == 'dl' %} доставляется. Будет через Х минут {% endif %}. 
+Ваш заказ {{ order.number }}{% if order.status == 'wt' %} ожидает подтверждения {% endif %} {% if order.status == 'ac' %} начали готовить {% endif %}{% if order.status == 'dl' %} доставляется. Будет через Х минут {% endif %}{% if order.status == 'cl' %} отменен {% endif %}. 
