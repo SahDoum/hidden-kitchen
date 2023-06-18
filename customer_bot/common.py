@@ -31,12 +31,20 @@ def create_order_from_request(request):
     user_id = data.get('user_id', 0)
     user_hash = data.get('user_hash', 0)
     price = data.get('price', -1)
+    form_data = json.loads(data.get('form_data'))
 
     print("Request data:")
+    print(data)
+    print('init_data_hash')
     print(init_data_hash)
+    print('data_check_string')
     print(data_check_string)
+    print('user_id')
     print(user_id)
+    print('user_hash')
     print(user_hash)
+    print('form_data')
+    print(form_data)
 
     is_inside = True
     is_cash_payment = True
@@ -46,8 +54,8 @@ def create_order_from_request(request):
     order = Order.create_from_telegram(
         user, 
         items=json.loads(data['order_data']), 
-        is_inside=is_inside,
-        is_cash_payment=is_cash_payment,
+        is_inside=form_data['is_inside']=='true',
+        is_cash_payment=form_data['is_cash_payment']=='false', # some shitty code. Should made it on client side or use django forms
         price=price,
         user_cash=user_cash,
         comment=data['comment'], 

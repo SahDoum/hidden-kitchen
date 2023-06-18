@@ -3,7 +3,6 @@ import sys
 import os
 
 
-
 class CustomerBotConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'customer_bot'

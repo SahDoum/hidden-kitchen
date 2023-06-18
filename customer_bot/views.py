@@ -44,7 +44,7 @@ def create_invoice(request):
     invoice = bot.createInvoiceLink(
         title="Заказ из Хидден",
         description="Еда, которая насытит тело и дух",
-        payload= "hpb@" + order.id, # add order id
+        payload= "hpb@" + str(order.id), # add order id
         provider_token=PROVIDER_TOKEN,
         currency='GEL',
         prices=order.pricesSequence(),

@@ -3,8 +3,11 @@ from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, ContextTypes, Filters, PreCheckoutQueryHandler
 
 from users.models import User
+from orders.models import Order
 
 from HiddenKitchen.settings import CUSTOMER_BOT_TOKEN, APP_SERVER
+import uuid
+
 
 
 def start_command(update: Update, context: CallbackContext) -> None:
@@ -32,12 +35,15 @@ def successful_payment_callback(update: Update, _) -> None:
 
 def precheckout_callback(update: Update, _: CallbackContext) -> None:
     query = update.pre_checkout_query
+    code, uid_str = query.invoice_payload.split('@', 1)
     # check the payload, is this from your bot?
-    if query.invoice_payload != 'hidden-bot-payment':
+    if query.invoice_payload.split('@', 1) != 'hbp':
         # answer False pre_checkout_query
         query.answer(ok=False, error_message="Something went wrong...")
-    else:
-        query.answer(ok=True)
+
+    uid = uuid.UUID(uid_str)
+    order = Order.objects.get(id=uid)
+    query.answer(ok=True)
 
 
 bot = Bot(token=CUSTOMER_BOT_TOKEN) # should I move it to notifications?

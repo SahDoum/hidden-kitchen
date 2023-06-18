@@ -90,7 +90,7 @@ class Order(models.Model):
     @property
     def number(self):
         letter = 'A' if self.is_inside else 'B'
-        return letter + self.pretty_id
+        return f'{letter}-{self.pretty_id:03d}'
 
 
     def __str__(self):
