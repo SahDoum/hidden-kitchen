@@ -91,7 +91,7 @@ def init_polling():
 
     dispatcher.add_handler(CallbackQueryHandler(cancel_order, pattern=r"^cancel_order:.+"))
     dispatcher.add_handler(CallbackQueryHandler(accept_order, pattern=r"^accept_order:.+"))
-    dispatcher.add_handler(CallbackQueryHandler(accept_order, pattern=r"^delivery_order:.+"))
+    dispatcher.add_handler(CallbackQueryHandler(delivery_order, pattern=r"^delivery_order:.+"))
 
 
     print("Starting polling")

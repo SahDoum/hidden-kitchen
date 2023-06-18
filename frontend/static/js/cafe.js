@@ -18,6 +18,14 @@ function getFormData($form){
     return indexed_array;
 }
 
+
+window.Telegram.WebApp.onEvent('invoiceClosed', function(object) {
+  if (object.status == 'pending' || object.status == 'paid') {
+    window.Telegram.WebApp.close();
+  }
+});
+
+
 var Cafe = {
   canPay: false,
   modeOrder: 0,
