@@ -53,13 +53,13 @@ def accept_order(update: Update, context: CallbackContext):
     update.callback_query.edit_message_text(   
         render_html_message(
             template="order_status_kitchen.html",
-            order=order,
+            order=order
         ),
         reply_markup=telegram.InlineKeyboardMarkup([
-                [
-                    telegram.InlineKeyboardButton("🏃‍♀️ Отправить с курьером", callback_data=f"delivery_order:{order.id}"),
-                ],
-            ])
+            [
+                telegram.InlineKeyboardButton("🏃‍♀️ Отправить с курьером", callback_data=f"delivery_order:{order.id}"),
+            ],
+        ]),
         parse_mode=ParseMode.HTML
     )
 

@@ -27,6 +27,7 @@ class Order(models.Model):
     OS_DELIVERY = "dl"
     OS_DONE     = "dn"
     OS_ERROR    = "er"
+    OS_CANCELED = "cl"
 
     STATUSES = [
         (OS_WAIT, "ждем ответ от Hidden Kitchen"),
@@ -35,6 +36,7 @@ class Order(models.Model):
         (OS_DELIVERY, "ваш заказ будет доставлен в течение X минут"),
         (OS_DONE, "заказ доставлен"),
         (OS_ERROR, "произошла ошибка"),
+        (OS_CANCELED, "отменен"),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -98,17 +100,17 @@ class Order(models.Model):
 
 
     def accept(self):
-        self.status = Order.Statuses.ACCEPTED
+        self.status = OS_ACCEPTED
         self.save()
         signals.send_order_status_to_customer(self)
 
     def delivery(self):
-        self.status = Order.Statuses.DELIVERY
+        self.status = OS_DELIVERY
         self.save()
         signals.send_order_status_to_customer(self)
 
     def cancel(self):
-        self.status = Order.Statuses.CANCELED
+        self.status = OS_CANCELED
         self.save()
         signals.send_order_status_to_customer(self)
 
