@@ -100,17 +100,17 @@ class Order(models.Model):
 
 
     def accept(self):
-        self.status = OS_ACCEPTED
+        self.status = Order.OS_ACCEPTED
         self.save()
         signals.send_order_status_to_customer(self)
 
     def delivery(self):
-        self.status = OS_DELIVERY
+        self.status = Order.OS_DELIVERY
         self.save()
         signals.send_order_status_to_customer(self)
 
     def cancel(self):
-        self.status = OS_CANCELED
+        self.status = Order.OS_CANCELED
         self.save()
         signals.send_order_status_to_customer(self)
 
@@ -125,6 +125,10 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def decimal_price(self):
+        return self.price*.01
 
 
 # https://github.com/legionscript/deliver/tree/tutorial7
