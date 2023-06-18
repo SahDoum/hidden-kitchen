@@ -41,7 +41,7 @@ def cancel_order(update: Update, context: CallbackContext):
     order.cancel()
 
     #update.callback_query.edit_message_reply_markup(reply_markup=None)
-    update.callback_query.edit_message_reply_text(   
+    update.callback_query.edit_message_text(   
         render_html_message(
             template="order_status_kitchen.html",
             order=order,
@@ -61,7 +61,7 @@ def accept_order(update: Update, context: CallbackContext):
     update.effective_chat.send_message(
         f"Заказ «{order.id}» отклонен"
     )
-    update.callback_query.edit_message_reply_text(   
+    update.callback_query.edit_message_text(   
         render_html_message(
             template="order_status_kitchen.html",
             order=order,
@@ -79,7 +79,7 @@ def delivery_order(update: Update, context: CallbackContext):
     order = Order.objects.get(id=order_id)
 
     order.delivery()
-    update.callback_query.edit_message_reply_text(   
+    update.callback_query.edit_message_text(   
         render_html_message(
             template="order_status_kitchen.html",
             order=order,
