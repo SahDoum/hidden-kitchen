@@ -18,19 +18,21 @@ def start_command(update: Update, context: CallbackContext) -> None:
 
 
 def successful_payment_callback(update: Update, _) -> None:
-    """Confirms the successful payment."""
-    # do something after successfully receiving payment?
     payment = update.message.successful_payment
 
-    print(payment)
-    print(payment.invoice_payload)
-    print(payment.order_info)
-    print(payment.telegram_payment_charge_id)
-    print(payment.provider_payment_charge_id)
+    code, uid_str = payment.invoice_payload.split('@', 1)
+
+    if code != 'hpb':
+        update.message.reply_text("Что-то пошло не так...")
+        return
 
     # get order, update status
 
-    update.message.reply_text("Thank you for your payment!")
+    uid = uuid.UUID(uid_str)
+    order = Order.objects.get(id=uid)
+    order.paid()
+
+    update.message.reply_text("Ваша оплата прошла, ждем ответа от кухни!")
 
 
 def precheckout_callback(update: Update, _: CallbackContext) -> None:
@@ -39,7 +41,7 @@ def precheckout_callback(update: Update, _: CallbackContext) -> None:
     # check the payload, is this from your bot?
     if code != 'hpb':
         # answer False pre_checkout_query
-        query.answer(ok=False, error_message="Something went wrong...")
+        query.answer(ok=False, error_message="Что-то пошло не так...")
 
     uid = uuid.UUID(uid_str)
     order = Order.objects.get(id=uid)

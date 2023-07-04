@@ -29,28 +29,16 @@ def create_order_from_request(request):
     data_check_string = data.get('dataCheckString', 0)
 
     user_id = data.get('user_id', 0)
-    user_hash = data.get('user_hash', 0)
+    init_data_hash = data.get('initDataHash', 0)
+    data_check_string = data.get('dataCheckString', 0)
     price = data.get('price', -1)
     form_data = json.loads(data.get('form_data'))
-
-    print("Request data:")
-    print(data)
-    print('init_data_hash')
-    print(init_data_hash)
-    print('data_check_string')
-    print(data_check_string)
-    print('user_id')
-    print(user_id)
-    print('user_hash')
-    print(user_hash)
-    print('form_data')
-    print(form_data)
 
     is_inside = True
     is_cash_payment = True
     user_cash = -1
 
-    user = User.get_telegram_user(user_id, user_hash)
+    user = User.get_telegram_user(user_id, init_data_hash)
     order = Order.create_from_telegram(
         user, 
         items=json.loads(data['order_data']), 

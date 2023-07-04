@@ -12,15 +12,7 @@ from users.models import User
 
 class Order(models.Model):
 
-    class Statuses(models.TextChoices):
-        WAIT = "WT", _("Ждем ответ от Hidden Kitchen")
-        ACCEPTED = "AC", _("Ваш заказ готовится")
-        READY = "RD", _("Ваш заказ готов и ждет курьера")
-        DELIVERY = "DL", _("Ваш заказ будет доставлен в течение X минут")
-        DONE = "DN", _("Заказ доставлен")
-        ERROR = "ER", _("Произошла ошибка")
-        CANCELED = "CL", _("Заказ отменен")
-
+    OS_UNPAID  = "up"
     OS_WAIT     = "wt"
     OS_ACCEPTED = "ac"
     OS_READY    = "rd"
@@ -30,6 +22,7 @@ class Order(models.Model):
     OS_CANCELED = "cl"
 
     STATUSES = [
+        (OS_UNPAID, 'ждем оплаты'),
         (OS_WAIT, "ждем ответ от Hidden Kitchen"),
         (OS_ACCEPTED, "ваш заказ принят"),
         (OS_READY, "ваш заказ готов и ждет курьера"),
@@ -42,7 +35,7 @@ class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     pretty_id = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(max_length=2, choices=Statuses.choices, default=OS_WAIT)
+    status = models.CharField(max_length=2, choices=STATUSES, default=OS_WAIT)
 
     items = models.JSONField(blank=False)
     is_inside = models.BooleanField(blank=False)
@@ -59,10 +52,13 @@ class Order(models.Model):
 
     @classmethod
     def create_from_telegram(cls, user, items, is_inside, is_cash_payment, price=-1, user_cash=-1, comment=None):
+
+        status = OS_WAIT if is_cash_payment else OS_UNPAID
         pretty_id = cls.objects.filter(is_inside=is_inside).count()
         order = cls.objects.create(
             pretty_id=pretty_id%999 + 1,
             user=user, 
+            status=status,
             items=items, 
             comment=comment, 
             price=price,
@@ -70,8 +66,10 @@ class Order(models.Model):
             is_cash_payment=is_cash_payment,
             user_cash=user_cash,
         )
-        signals.send_order_to_customer(order)
-        signals.send_new_order_to_kitchen(order)
+
+        if is_cash_payment:
+            signals.send_order_to_customer(order)
+            signals.send_new_order_to_kitchen(order)
         return order
 
     def pricesSequence(self):
@@ -97,6 +95,17 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
+
+
+    def paid(self):
+        if self.status != Order.OS_UNPAID:
+            return
+
+        self.status = Order.OS_WAIT
+        self.save()
+
+        signals.send_order_to_customer(order)
+        signals.send_new_order_to_kitchen(order)
 
 
     def accept(self):
