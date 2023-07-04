@@ -18,6 +18,65 @@ function getFormData($form){
     return indexed_array;
 }
 
+function resetFormErrors() {
+  $(".input-group").removeClass("error");
+  $(".error-message").remove();
+  $("input").attr("placeholder", ""); // Clear placeholders
+}
+
+$("#main-form :input").on("input change", function() {
+    resetFormErrors();
+});
+
+
+function  validateForm($form){
+    $(".input-group").removeClass("error");
+    $(".error-message").remove();
+
+    // Validate radio groups
+    const isInside = $("input[name='is_inside']:checked").val();
+    const isCashPayment = $("input[name='is_cash_payment']:checked").val();
+    const name = $("input[name='name']").val();
+    const phone = $("input[name='phone']").val();
+    const address = $("input[name='address']").val();
+
+    let hasError = false;
+
+    // Validation for radio groups
+    if (isInside === undefined ) {
+      hasError = true;
+      $("#is_inside").addClass("error");
+    }
+    if (isCashPayment === undefined) {
+      hasError = true;
+      $("#is_cash").addClass("error");
+    }
+
+    // Validation for name (always required)
+    if (!name) {
+      hasError = true;
+      $("input[name='name']").parent().addClass("error");
+      $("input[name='name']").attr("placeholder", "Введите имя");
+
+    }
+
+    // Validation for phone and address if "is_inside" is false
+    if (isInside === "false" && (!phone || !address)) {
+      hasError = true;
+      if (!phone) {
+        $("input[name='phone']").parent().addClass("error");
+        $("input[name='phone']").attr("placeholder", "Телефон обязателен при доставке");
+      }
+      if (!address) {
+        $("input[name='address']").parent().addClass("error");
+        $("input[name='address']").attr("placeholder", "Адрес обязателен при доставке");
+      }
+    }
+
+    return !hasError;
+  };
+
+
 
 window.Telegram.WebApp.onEvent('invoiceClosed', function(object) {
   if (object.status == 'pending' || object.status == 'paid') {
@@ -337,6 +396,13 @@ var Cafe = {
       Cafe.toggleMode(2);
     } else if (Cafe.modeOrder == 2) {
 
+
+      $("#main-form").valid();
+
+      var isValid = validateForm();
+      if (!isValid) {
+        return;
+      }
       var form_data = getFormData($("#main-form"));
       // check form here
 
@@ -438,7 +504,8 @@ var Cafe = {
         onCallback && onCallback(result);
       },
       error: function (xhr) {
-        onCallback && onCallback({ error: "Server error at " + Cafe.apiUrl });
+        //onCallback && onCallback({ error: "Server error at " + Cafe.apiUrl });
+        onCallback && onCallback({ error: "При заказе случилась ошибка. Попробуйте еще раз чуть позже."});
       },
     });
   },

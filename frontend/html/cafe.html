@@ -98,13 +98,13 @@
       <span class="cafe-order-edit js-payment-edit">Назад</span>
     </div>
     <form id="main-form">
-      <div class="input-group">
+      <div class="input-group" id="is_inside"> 
           <input id="is_inside_true" type="radio" name="is_inside" value="true">
           <label for="is_inside_true">Я в Hidden Kitchen</label>
           <input id="is_inside_false" type="radio" name="is_inside" value="false">
           <label for="is_inside_false">Заказать доставку</label>
       </div>
-      <div class="input-group">
+      <div class="input-group" id="is_cash">
           <input id="is_cash_payment_true" type="radio" name="is_cash_payment" value="true">
           <label for="is_cash_payment_true">Оплата наличными</label>
           <input id="is_cash_payment_false" type="radio" name="is_cash_payment" value="false">
@@ -125,12 +125,12 @@
 </section>
 
 
-
 <div class="cafe-status-wrap">
   <div class="cafe-status js-status"></div>
 </div>
     <script src="https://tg.dev/js/jquery.min.js"></script>
-    <script src="https://tg.dev/js/tgsticker.js?27"></script>
+    <!-- <script src="https://tg.dev/js/tgsticker.js?27"></script> -->
+    <script src="static/js/jquery.validate.min.js"></script>
     <script src="static/js/cafe.js"></script>
     <script>
 
@@ -143,8 +143,11 @@
       initData.sort();
       var dataCheckString = initData.toString();
 
+      // var userId = 0;
+      // var initDataHash = 0;
+      // var dataCheckString = 0;
+
       var cafe_api = `${window.location.origin}/customer`
       Cafe.init({"apiUrl":cafe_api,"userId": userId, "initDataHash":initDataHash, "dataCheckString": dataCheckString});</script>
   </body>
 </html>
-<!-- page generated in 1.46ms -->
